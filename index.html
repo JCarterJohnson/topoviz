@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Topoviz: Interactive 4D Shape &amp; Tesseract Simulator</title>
+<meta name="description" content="Free, browser-based 4D shape simulator. Rotate a tesseract in true four dimensions, slice the hypercube, 16-cell, 24-cell and glome, then throw 4D polytopes around a real-time physics sandbox. No download."/>
+<meta name="robots" content="index, follow, max-image-preview:large"/>
+<meta name="keywords" content="4d shape simulator, interactive tesseract, hypercube generator, 4d physics sandbox, 4d polytope viewer, visualize 4th dimension, polychora, glome, duoprism"/>
+<meta name="author" content="Topoviz"/>
+<meta name="theme-color" content="#060810"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="Topoviz"/>
+<meta property="og:title" content="Topoviz: Interactive 4D Shape &amp; Tesseract Simulator"/>
+<meta property="og:description" content="Rotate, slice and throw four-dimensional polytopes in a real-time physics sandbox. A free, browser-based 4D shape and tesseract simulator."/>
+<link rel="canonical" href="https://topoviz.org/"/>
+<meta property="og:url" content="https://topoviz.org/"/>
+<meta property="og:image" content="https://topoviz.org/topoviz-og.png"/>
+<meta property="og:image:width" content="2400"/>
+<meta property="og:image:height" content="1262"/>
+<meta property="og:image:alt" content="Topoviz: interactive 4D shape and tesseract simulator"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Topoviz: Interactive 4D Shape &amp; Tesseract Simulator"/>
+<meta name="twitter:description" content="A free, browser-based 4D physics sandbox. Rotate a tesseract, slice the glome, and collide hypercubes in real time."/>
+<meta name="twitter:image" content="https://topoviz.org/topoviz-og.png"/>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Topoviz","url":"https://topoviz.org/","image":"https://topoviz.org/topoviz-og.png","alternateName":"Topoviz 4D Shape and Tesseract Simulator","applicationCategory":"EducationalApplication","operatingSystem":"Any modern web browser","browserRequirements":"Requires JavaScript and an HTML5 canvas","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A free, browser-based interactive 4D shape visualizer and cross-dimensional physics sandbox for the tesseract, the regular polychora, uniform duoprisms, and the glome.","featureList":["True four-dimensional rotation across the six coordinate planes","Real-time cross-section slicing of 4D polytopes","Cross-dimensional physics with mass, gravity, and collisions","Interactive tesseract, 5-cell, 16-cell, 24-cell, duoprisms, and glome","Live vertex, edge, face, and cell counts"]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is a 4D cube explained?","acceptedAnswer":{"@type":"Answer","text":"A 4D cube, called a tesseract or hypercube, is the four-dimensional analog of a cube. It is bounded by 8 cubic cells and has 16 vertices, 32 edges, and 24 square faces. Topoviz shows it as the morphing 3D cross-section produced when the tesseract is sliced by our space."}},
+{"@type":"Question","name":"What is a 5D cube called?","acceptedAnswer":{"@type":"Answer","text":"A five-dimensional cube is called a penteract. It is built from 10 tesseract cells and contains 32 vertices, 80 edges, 80 square faces, and 40 cubic cells. Each higher dimension doubles the vertex count, following the pattern 2 to the power n."}},
+{"@type":"Question","name":"Is there a 4D sphere?","acceptedAnswer":{"@type":"Answer","text":"Yes. A four-dimensional sphere is called a 3-sphere, or glome, the set of all points an equal distance from a center in 4D space. Its three-dimensional cross-sections appear as ordinary spheres that grow and shrink as the glome passes through our space, exactly what Topoviz animates."}},
+{"@type":"Question","name":"Do any 4D objects exist?","acceptedAnswer":{"@type":"Answer","text":"Four-dimensional shapes do not exist physically in our three-dimensional universe, but they exist precisely as Euclidean mathematical objects. There are exactly six regular convex polychora, the 4D analogs of the five Platonic solids, and their coordinates, rotations, and collisions can be computed exactly."}},
+{"@type":"Question","name":"How can you visualize the 4th dimension?","acceptedAnswer":{"@type":"Answer","text":"You visualize the fourth dimension through its three-dimensional shadows: projections and cross-sections. Topoviz uses the cross-section method, slicing a rotating 4D polytope with our space and drawing the solid slice. Watching that slice morph as the shape turns lets your mind infer the full four-dimensional structure."}},
+{"@type":"Question","name":"Why do the edges of a hypercube look curved?","acceptedAnswer":{"@type":"Answer","text":"Curved hypercube edges come from stereographic projection, a conformal mapping that preserves angles and bends straight 4D edges into arcs. Topoviz instead renders solid cross-sections, so its polytope faces have crisp straight edges, while true curvature appears only on the glome, the genuine 4D sphere."}},
+{"@type":"Question","name":"Why is animating the 4th dimension confusing?","acceptedAnswer":{"@type":"Answer","text":"Animating the fourth dimension is confusing because flattening a 4D object into 3D makes parts appear to turn inside out, pass through each other, and warp in ways that defy everyday intuition. Grounding the motion with gravity, mass, and collisions, as Topoviz does, anchors the abstract math to familiar physics."}},
+{"@type":"Question","name":"What is the difference between time and space as the 4th dimension?","acceptedAnswer":{"@type":"Answer","text":"As a spatial dimension, the fourth dimension is a direction at right angles to length, width, and height, and an object can move and rotate along it. In Einstein's relativity the fourth dimension is time. Topoviz simulates a purely spatial, Euclidean fourth dimension, not time."}},
+{"@type":"Question","name":"How do objects rotate in 4D space?","acceptedAnswer":{"@type":"Answer","text":"In 3D, objects rotate about an axis; in 4D, they rotate about a fixed plane. Four-dimensional space has six planes of rotation: XY, XZ, XW, YZ, YW, and ZW. Rotations in the three planes that include the W-axis are what continuously reshape a 4D object's cross-section."}}
+]}
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg0);font-family:'Rajdhani',sans-serif;color:var(--txt);min-height:100vh;-webkit-text-size-adjust:100%;overflow-x:hidden}
+:root{--bg0:#060810;--bgp:rgba(0,10,20,0.65);--acc:#00ffc8;--acc2:#4488ff;--acca:rgba(0,255,200,0.1);--accb:rgba(0,255,200,0.05);--txt:#c8d4e8;--dim:rgba(200,212,232,0.38);--bdr:rgba(0,255,200,0.11);--bdr2:rgba(0,255,200,0.26);--grid:rgba(0,255,200,0.035);--floor:rgba(0,255,200,0.28);--fr:0;--fg:255;--fb:200}
+.t-plasma{--bg0:#0a0510;--bgp:rgba(10,5,20,0.7);--acc:#df60ff;--acc2:#ff44aa;--acca:rgba(220,80,255,0.1);--accb:rgba(220,80,255,0.05);--txt:#e0ccf0;--dim:rgba(220,200,240,0.38);--bdr:rgba(220,80,255,0.13);--bdr2:rgba(220,80,255,0.28);--grid:rgba(200,60,255,0.035);--floor:rgba(220,80,255,0.32);--fr:200;--fg:60;--fb:255}
+.t-fire{--bg0:#0d0500;--bgp:rgba(15,5,0,0.7);--acc:#ff8c00;--acc2:#ff3030;--acca:rgba(255,140,0,0.1);--accb:rgba(255,140,0,0.05);--txt:#f0d8b0;--dim:rgba(240,200,160,0.38);--bdr:rgba(255,140,0,0.13);--bdr2:rgba(255,140,0,0.28);--grid:rgba(255,100,0,0.035);--floor:rgba(255,140,0,0.28);--fr:255;--fg:140;--fb:0}
+.t-ice{--bg0:#00080f;--bgp:rgba(0,8,20,0.7);--acc:#40c8ff;--acc2:#0080ff;--acca:rgba(64,200,255,0.1);--accb:rgba(64,200,255,0.05);--txt:#b8d8f0;--dim:rgba(180,216,240,0.38);--bdr:rgba(64,200,255,0.13);--bdr2:rgba(64,200,255,0.28);--grid:rgba(40,180,255,0.035);--floor:rgba(64,200,255,0.28);--fr:40;--fg:200;--fb:255}
+.t-gold{--bg0:#080600;--bgp:rgba(10,8,0,0.7);--acc:#ffd700;--acc2:#ff9900;--acca:rgba(255,215,0,0.1);--accb:rgba(255,215,0,0.05);--txt:#f0e8c0;--dim:rgba(240,220,160,0.38);--bdr:rgba(255,215,0,0.13);--bdr2:rgba(255,215,0,0.28);--grid:rgba(255,200,0,0.035);--floor:rgba(255,215,0,0.28);--fr:255;--fg:215;--fb:0}
+.t-ghost{--bg0:#f4f5f9;--bgp:rgba(244,245,249,0.88);--acc:#1a1a3e;--acc2:#3344aa;--acca:rgba(26,26,62,0.07);--accb:rgba(26,26,62,0.03);--txt:#1a1a3e;--dim:rgba(26,26,62,0.42);--bdr:rgba(26,26,62,0.11);--bdr2:rgba(26,26,62,0.24);--grid:rgba(26,26,62,0.035);--floor:rgba(26,26,62,0.28);--fr:26;--fg:26;--fb:120}
+/* The interactive app is now a bounded, responsive panel (no longer a viewport lock), so the page can scroll past it to the guide below. */
+#root{display:flex;flex-direction:column;height:clamp(500px,76vh,840px);max-width:1320px;margin:6px auto 0;border:1px solid var(--bdr2);background:var(--bg0);position:relative}
+.corner{position:absolute;width:13px;height:13px;z-index:101;pointer-events:none}
+.corner-tl{top:7px;left:7px;border-top:1px solid var(--acc);border-left:1px solid var(--acc)}
+.corner-tr{top:7px;right:7px;border-top:1px solid var(--acc);border-right:1px solid var(--acc)}
+.corner-bl{bottom:7px;left:7px;border-bottom:1px solid var(--acc);border-left:1px solid var(--acc)}
+.corner-br{bottom:7px;right:7px;border-bottom:1px solid var(--acc);border-right:1px solid var(--acc)}
+#top-bar{display:flex;align-items:center;gap:10px;padding:7px 16px;border-bottom:1px solid var(--bdr);background:var(--bgp);flex-shrink:0}
+.logo{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--acc);letter-spacing:.14em}
+.logo em{color:var(--acc2);font-style:normal;margin-right:3px}
+.topstat{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.07em;margin-left:auto}
+.topstat b{color:var(--acc)}
+.theme-row{display:flex;gap:4px;align-items:center}
+.tlbl{font-size:8px;letter-spacing:.1em;color:var(--dim);font-family:'Share Tech Mono',monospace;text-transform:uppercase;margin-right:2px}
+.sw{width:13px;height:13px;cursor:pointer;border:1px solid transparent;transition:all .15s;flex-shrink:0}
+.sw:hover,.sw.on{border-color:var(--txt);transform:scale(1.18)}
+.sw[data-t=cyber]{background:#00ffc8}.sw[data-t=plasma]{background:#df60ff}.sw[data-t=fire]{background:#ff8c00}.sw[data-t=ice]{background:#40c8ff}.sw[data-t=gold]{background:#ffd700}.sw[data-t=ghost]{background:#1a1a3e}
+#main{display:flex;flex:1;overflow:hidden}
+#sb{width:215px;flex-shrink:0;border-right:1px solid var(--bdr);background:var(--bgp);display:flex;flex-direction:column;padding:11px 0}
+.sh{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.2em;color:var(--dim);padding:0 13px 6px;text-transform:uppercase}
+.dtabs{display:flex;gap:3px;padding:0 10px 11px;border-bottom:1px solid var(--bdr);margin-bottom:11px}
+.dtab{flex:1;padding:5px 0;font-family:'Share Tech Mono',monospace;font-size:10px;border:1px solid var(--bdr2);background:transparent;color:var(--dim);cursor:pointer;transition:all .2s;letter-spacing:.04em;text-align:center}
+.dtab.on{background:var(--acca);border-color:var(--acc);color:var(--acc);text-shadow:0 0 6px var(--acc)}
+.dtab:hover:not(.on){background:var(--accb);color:var(--txt)}
+.ctrl{padding:0 12px 9px;display:flex;flex-direction:column;gap:5px}
+.clbl{display:flex;justify-content:space-between;font-size:10px;color:var(--dim);letter-spacing:.03em}
+.cval{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--acc)}
+input[type=range]{width:100%;height:2px;-webkit-appearance:none;appearance:none;background:var(--bdr2);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:9px;height:9px;border-radius:0;background:var(--acc);box-shadow:0 0 5px var(--acc)}
+input[type=range]::-moz-range-thumb{width:9px;height:9px;border:none;border-radius:0;background:var(--acc)}
+.snbox{margin:0 12px 10px;background:var(--accb);border:1px solid var(--bdr2);padding:7px 9px}
+.snlbl{font-size:8px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;font-family:'Share Tech Mono',monospace}
+.snval{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--acc);margin-top:3px;line-height:1.3;min-height:14px}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:11px 10px 0;border-top:1px solid var(--bdr);margin-top:auto}
+.sbox{background:var(--accb);border:1px solid var(--bdr);padding:6px 7px}
+.slbl{font-size:8px;letter-spacing:.11em;color:var(--dim);text-transform:uppercase}
+.snum{font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--acc);text-shadow:0 0 5px var(--acc)}
+#cw{flex:1;position:relative;overflow:hidden}
+#c{display:block}
+.mbadge{position:absolute;top:9px;left:9px;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.13em;color:var(--acc);background:var(--bgp);border:1px solid var(--bdr2);padding:3px 8px;text-transform:uppercase}
+.hint{position:absolute;bottom:52px;right:9px;font-size:8px;letter-spacing:.09em;color:var(--dim);font-family:'Share Tech Mono',monospace}
+#bot{display:flex;align-items:center;gap:7px;padding:8px 12px;border-top:1px solid var(--bdr);background:var(--bgp);flex-shrink:0}
+.cbtn{padding:6px 15px;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;cursor:pointer;transition:all .2s;border:1px solid var(--bdr2);background:var(--accb);color:var(--acc)}
+.cbtn:hover{background:var(--acca)}.cbtn.pri{background:var(--acca);border-color:var(--acc)}
+.cbtn.del{border-color:rgba(255,80,80,.3);color:#ff5050;background:rgba(255,50,50,.04)}.cbtn.del:hover{background:rgba(255,50,50,.1)}
+.adstrip{font-size:8px;letter-spacing:.13em;color:var(--dim);text-transform:uppercase;margin-left:auto;border:1px solid var(--bdr);padding:3px 9px;opacity:.45}
+/* ============================================================
+   SEO LANDING LAYER. Body copy -> Rajdhani, headers -> Share Tech Mono,
+   colours -> the same theme CSS variables the app uses.
+   ============================================================ */
+main{display:block}
+.hero{max-width:980px;margin:0 auto;padding:30px 22px 6px;text-align:center}
+.hero h1{font-family:'Share Tech Mono',monospace;font-weight:400;font-size:clamp(21px,3.9vw,38px);line-height:1.16;letter-spacing:.01em;color:var(--acc);text-shadow:0 0 20px var(--acca)}
+.hero h1 .a2{color:var(--acc2)}
+.hero-sub{max-width:740px;margin:12px auto 0;font-size:clamp(13px,1.55vw,16px);line-height:1.6;color:var(--txt);opacity:.82}
+.scroll-cue{text-align:center;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase;padding:14px 0 0}
+.seo{max-width:880px;margin:0 auto;padding:24px 22px;color:var(--txt)}
+.seo h2{font-family:'Share Tech Mono',monospace;font-weight:400;font-size:clamp(18px,2.5vw,26px);line-height:1.25;color:var(--acc);letter-spacing:.01em;margin:36px 0 8px;padding-bottom:10px;border-bottom:1px solid var(--bdr)}
+.seo h2:first-child{margin-top:8px}
+.seo h3{font-family:'Share Tech Mono',monospace;font-weight:400;font-size:clamp(14px,1.85vw,18px);line-height:1.3;color:var(--acc2);letter-spacing:.01em;margin:22px 0 6px}
+.seo p{font-size:16px;line-height:1.72;margin:0 0 12px;color:var(--txt);opacity:.9}
+.seo strong{color:var(--acc);font-weight:600}
+.seo-faq .faq-item{border:1px solid var(--bdr2);background:var(--accb);padding:13px 18px;margin:11px 0;border-radius:4px}
+.seo-faq .faq-item h3{margin:0 0 6px;color:var(--acc)}
+.seo-faq .faq-atomic{margin:0;opacity:.95}
+.site-foot{max-width:880px;margin:0 auto;padding:26px 22px 52px;border-top:1px solid var(--bdr);text-align:center}
+.site-foot .foot-links{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;line-height:2}
+.site-foot .foot-links b{color:var(--acc2)}
+.site-foot .foot-fine{margin-top:10px;font-size:12.5px;color:var(--dim);line-height:1.6}
+@media(max-width:760px){
+  #top-bar{flex-wrap:wrap;gap:4px 10px;padding:7px 12px}
+  .topstat{margin-left:0;order:3;width:100%}
+  #root{height:auto;margin-top:4px}
+  #main{flex-direction:column}
+  #cw{order:1;flex:none;width:100%;height:56vh;min-height:320px}
+  #sb{order:2;width:100%;border-right:none;border-top:1px solid var(--bdr)}
+  .seo,.hero,.site-foot{padding-left:16px;padding-right:16px}
+}
+</style>
+</head>
+<body>
+<main>
+<article class="page-article">
+<header class="hero">
+  <h1>The Ultimate <span class="a2">4D Shape</span> Visualizer &amp; Physics Sandbox</h1>
+  <p class="hero-sub">Topoviz is a free, browser-based 4D shape simulator. Rotate a tesseract in true four-dimensional space, watch its cross-section morph, then drag and throw hypercubes, the glome, and duoprisms around a real-time cross-dimensional physics sandbox. No download, no paywall.</p>
+</header>
+<div id="root">
+<div class="corner corner-tl"></div><div class="corner corner-tr"></div><div class="corner corner-bl"></div><div class="corner corner-br"></div>
+<div id="top-bar">
+  <div class="logo"><em>//</em>TOPOVIZ <span style="font-size:9px;opacity:.45">v1.2</span></div>
+  <div class="theme-row"><span class="tlbl">Theme</span>
+    <div class="sw on" data-t="cyber"></div><div class="sw" data-t="plasma"></div><div class="sw" data-t="fire"></div><div class="sw" data-t="ice"></div><div class="sw" data-t="gold"></div><div class="sw" data-t="ghost"></div>
+  </div>
+  <div class="topstat">DIM:<b id="ts-d">2</b> V:<b id="ts-v">4</b> E:<b id="ts-e">4</b> F:<b id="ts-f">1</b></div>
+</div>
+<div id="main">
+  <div id="sb">
+    <div class="sh">Dimension</div>
+    <div class="dtabs">
+      <div class="dtab" data-d="1">1D</div><div class="dtab on" data-d="2">2D</div><div class="dtab" data-d="3">3D</div><div class="dtab" data-d="4">4D</div>
+    </div>
+    <div id="ca"></div>
+    <div class="sgrid">
+      <div class="sbox"><div class="slbl">Verts</div><div class="snum" id="sv">4</div></div>
+      <div class="sbox"><div class="slbl">Edges</div><div class="snum" id="se">4</div></div>
+      <div class="sbox"><div class="slbl">Faces</div><div class="snum" id="sf">1</div></div>
+      <div class="sbox"><div class="slbl">Cells</div><div class="snum" id="sc">0</div></div>
+    </div>
+  </div>
+  <div id="cw"><canvas id="c" aria-label="Interactive 4D shape visualizer and physics sandbox: rotate, slice, and collide tesseracts, the regular polychora, duoprisms, and the glome"></canvas><div class="mbadge" id="mb">Builder</div><div class="hint" id="ht"></div></div>
+</div>
+<div id="bot"><button class="cbtn del" id="bcl">Clear</button><button class="cbtn pri" id="bsp">Enter Sandbox</button><div class="adstrip">Ad Space</div></div>
+</div><!-- /#root : interactive 4D sandbox -->
+
+<p class="scroll-cue">scroll to explore the fourth dimension &#8595;</p>
+
+<section class="seo" id="guide">
+  <h2>Explore the Fourth Dimension: Interactive Hypercube Generator</h2>
+  <p>Welcome to an unblocked, browser-based environment built to make higher-dimensional geometry something you can grab and play with. Unlike static diagrams or passive video loops, this interactive engine lets you rotate, slice, and collide real four-dimensional polytopes in real time, directly in your browser, with no download and no paywall.</p>
+
+  <h3>True 4D Rotation and Cross-Section Projection Mechanics</h3>
+  <p>The simulator performs genuine four-dimensional rotation, not a faked 3D spin. A rotation in four-space turns a <strong>plane</strong> rather than an axis, and there are six coordinate planes: XY, XZ, XW, YZ, YW, and ZW. Topoviz spins each polytope through the three planes that include the W-axis (XW, YW, and ZW), which is exactly what reshapes the figure, then slices it with our three-dimensional space. The solid <strong>cross-section</strong> of that cut is what you see, projected to your screen. This slicing approach is distinct from <strong>stereographic projection</strong>, the conformal mapping that gives wireframe hypercubes their curved edges, and from flat orthographic projection. Slicing keeps every cell a crisp, solid, correctly lit polyhedron instead of a tangle of overlapping lines, so a tesseract reads as a real object tumbling through your space.</p>
+
+  <h3>Real-Time 4D Physics: Collisions, Gravity, and Inertia</h3>
+  <p>This is the capability no other browser-based viewer offers: a genuine cross-dimensional physics sandbox. The polytopes here are not hollow graphics. Each one carries mass, velocity, and a live cross-sectional footprint, so when two shapes meet, their actual boundaries decide the bounce, friction, and energy they trade. Drag and throw a hypercube, drop a glome onto a cube, and watch gravity, inertia, and collisions play out. Because a four-dimensional body only touches our space through its current 3D cross-section, a lower-dimensional shape can shove it for an instant, after which it routes around the obstacle through the fourth axis, an escape that is impossible in three dimensions.</p>
+
+  <h3>Manipulating the W-Axis: Navigating Ana and Kata Directions</h3>
+  <p>To think in four dimensions you have to step past length, width, and height and add a fourth perpendicular direction, the W-axis. Moving toward positive W is called <strong>ana</strong> (up toward) and moving toward negative W is called <strong>kata</strong> (down from), terms coined by the mathematician Charles Howard Hinton in the late nineteenth century. As a shape rotates and shifts along W, its three-dimensional cross-section grows, shrinks, and can vanish entirely as the object slips fully out of our space. The glome makes this vivid, appearing as a sphere that swells and contracts as it travels along the fourth axis.</p>
+</section>
+
+<section class="seo">
+  <h2>Understanding Four-Dimensional Space and Geometry</h2>
+  <p>Visualizing higher dimensions means letting go of everyday sensory limits. Picture a flat, two-dimensional creature living on a tabletop. If a three-dimensional ball passes through its plane, the creature never perceives a sphere; it sees a dot that swells into a growing circle and then shrinks away. We sit exactly one rung up from that creature. When a tesseract tumbles through Topoviz, the solid you watch is a three-dimensional cross-section, the shadow our space catches of a complete, unyielding four-dimensional object.</p>
+
+  <h3>What is the Fourth Dimension? (Spatial vs. Temporal Physics)</h3>
+  <p>A common confusion is whether the fourth dimension is time or space. In Einstein's general relativity, time is treated as a non-Euclidean fourth dimension of the spacetime continuum. Topoviz simulates something different: a purely spatial, <strong>Euclidean</strong> fourth dimension, where the W-axis is geometrically identical to X, Y, and Z. That is what lets rigid bodies move, rotate, and roll around obstacles along a direction that would completely trap them inside a three-dimensional room.</p>
+
+  <h3>The Mathematics of 4D Visualization and Retinal Projection</h3>
+  <p>Our perception is bounded by biology. A three-dimensional eye has a flat, two-dimensional retina, so we read 3D space from 2D images. By the same logic, a four-dimensional being would possess a three-dimensional retina and could take in the entire interior and boundary of a solid at once. Topoviz bridges that gap with mathematics, mapping four-dimensional Euclidean coordinates through dot products, plane-based rotation matrices, and a slicing hyperplane down to a 3D cross-section your screen can display.</p>
+
+  <h3>How to Visualize 4D Shapes in a 3D World (Dimension Reduction)</h3>
+  <p>Mathematicians lean on dimension reduction: temporarily ignore one axis so a complicated intersection becomes readable. The same trick drives this tool. By tracking how a cross-section distorts as a polytope sweeps along the W-axis, your mind begins to assemble the underlying geometric continuity. Just as a rotating 3D object casts a shifting shadow on a wall, a 4D shape casts a shifting solid into our space, and 3D shapes distort in 4D in the very same way that 2D shapes distort in 3D.</p>
+
+  <h3>The 6 Regular Polychora: Moving Beyond Platonic Solids</h3>
+  <p>Three-dimensional space has exactly five regular Platonic solids; four-dimensional space has exactly six regular convex <strong>polychora</strong>, each written with a Schläfli symbol. They are the {3,3,3} 5-cell (pentachoron), the {4,3,3} tesseract (8-cell), the {3,3,4} 16-cell, the {3,4,3} 24-cell, the {5,3,3} 120-cell, and the {3,3,5} 600-cell. Topoviz lets you slice and collide the four that stay exact at real-time speed, the 5-cell, tesseract, 16-cell, and 24-cell, alongside a family of uniform <strong>duoprisms</strong> and the glome. A live panel reports the vertex, edge, face, and cell counts, and every shape satisfies the four-dimensional Euler relation, V minus E plus F minus C equals zero.</p>
+</section>
+
+<section class="seo seo-faq">
+  <h2>Frequently Asked Questions (FAQ)</h2>
+  <div class="faq-item"><h3>What is a 4D cube explained?</h3><p class="faq-atomic">A 4D cube, called a tesseract or hypercube, is the four-dimensional analog of a cube. It is bounded by 8 cubic cells and has 16 vertices, 32 edges, and 24 square faces. Topoviz shows it as the morphing 3D cross-section produced when the tesseract is sliced by our space.</p></div>
+  <div class="faq-item"><h3>What is a 5D cube called?</h3><p class="faq-atomic">A five-dimensional cube is called a penteract. It is built from 10 tesseract cells and contains 32 vertices, 80 edges, 80 square faces, and 40 cubic cells. Each higher dimension doubles the vertex count, following the pattern 2 to the power n.</p></div>
+  <div class="faq-item"><h3>Is there a 4D sphere?</h3><p class="faq-atomic">Yes. A four-dimensional sphere is called a 3-sphere, or glome, the set of all points an equal distance from a center in 4D space. Its three-dimensional cross-sections appear as ordinary spheres that grow and shrink as the glome passes through our space, exactly what Topoviz animates.</p></div>
+  <div class="faq-item"><h3>Do any 4D objects exist?</h3><p class="faq-atomic">Four-dimensional shapes do not exist physically in our three-dimensional universe, but they exist precisely as Euclidean mathematical objects. There are exactly six regular convex polychora, the 4D analogs of the five Platonic solids, and their coordinates, rotations, and collisions can be computed exactly.</p></div>
+  <div class="faq-item"><h3>How can you visualize the 4th dimension?</h3><p class="faq-atomic">You visualize the fourth dimension through its three-dimensional shadows: projections and cross-sections. Topoviz uses the cross-section method, slicing a rotating 4D polytope with our space and drawing the solid slice. Watching that slice morph as the shape turns lets your mind infer the full four-dimensional structure.</p></div>
+  <div class="faq-item"><h3>Why do the edges of a hypercube look curved?</h3><p class="faq-atomic">Curved hypercube edges come from stereographic projection, a conformal mapping that preserves angles and bends straight 4D edges into arcs. Topoviz instead renders solid cross-sections, so its polytope faces have crisp straight edges, while true curvature appears only on the glome, the genuine 4D sphere.</p></div>
+  <div class="faq-item"><h3>Why is animating the 4th dimension confusing?</h3><p class="faq-atomic">Animating the fourth dimension is confusing because flattening a 4D object into 3D makes parts appear to turn inside out, pass through each other, and warp in ways that defy everyday intuition. Grounding the motion with gravity, mass, and collisions, as Topoviz does, anchors the abstract math to familiar physics.</p></div>
+  <div class="faq-item"><h3>What is the difference between time and space as the 4th dimension?</h3><p class="faq-atomic">As a spatial dimension, the fourth dimension is a direction at right angles to length, width, and height, and an object can move and rotate along it. In Einstein's relativity the fourth dimension is time. Topoviz simulates a purely spatial, Euclidean fourth dimension, not time.</p></div>
+  <div class="faq-item"><h3>How do objects rotate in 4D space?</h3><p class="faq-atomic">In 3D, objects rotate about an axis; in 4D, they rotate about a fixed plane. Four-dimensional space has six planes of rotation: XY, XZ, XW, YZ, YW, and ZW. Rotations in the three planes that include the W-axis are what continuously reshape a 4D object's cross-section.</p></div>
+</section>
+</article>
+</main>
+<footer class="site-foot">
+  <p class="foot-links"><b>Topoviz</b> &middot; 4D Shape Simulator &middot; Interactive Tesseract &middot; Hypercube Generator &middot; 4D Physics Sandbox &middot; 4D Polytope Viewer</p>
+  <p class="foot-fine">A free, browser-based four-dimensional geometry tool for students, mathematicians, and the endlessly curious. Built to make the fourth dimension something you can see, rotate, and play with.</p>
+</footer>
+<script>
+"use strict";
+// ============================================================
+// TOPOVIZ. 1D/2D/3D/4D shape builder + cross-dimensional sandbox.
+// 4D shapes are rotated in 4D every frame, then sliced by our 3-space
+// {w = const}; the resulting 3D cross-section is the rendered solid, so
+// it genuinely tumbles and morphs the way a real 4D object would.
+// ============================================================
+
+// ---- THEME ----
+const THEMES={cyber:'',plasma:'t-plasma',fire:'t-fire',ice:'t-ice',gold:'t-gold',ghost:'t-ghost'};
+// Theme class lives on <body> so it colours the whole page (app + guide + footer).
+// cssv() still reads from #root, which inherits these custom properties.
+function applyTheme(t){document.body.className=THEMES[t]||'';document.querySelectorAll('.sw').forEach(s=>s.classList.toggle('on',s.dataset.t===t));}
+document.querySelectorAll('.sw').forEach(s=>s.addEventListener('click',()=>applyTheme(s.dataset.t)));
+
+// ---- CANVAS ----
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+let W,H;
+function resize(){const w=document.getElementById('cw');W=w.clientWidth;H=w.clientHeight;canvas.width=W;canvas.height=H;}
+resize();window.addEventListener('resize',resize);
+function cssv(n){return getComputedStyle(document.getElementById('root')).getPropertyValue(n).trim();}
+function acRGB(){return{fr:+cssv('--fr'),fg:+cssv('--fg'),fb:+cssv('--fb')};}
+
+// ---- 3D MATH ----
+const I3=()=>[[1,0,0],[0,1,0],[0,0,1]];
+function mm(A,B){const C=[[0,0,0],[0,0,0],[0,0,0]];for(let i=0;i<3;i++)for(let j=0;j<3;j++)for(let k=0;k<3;k++)C[i][j]+=A[i][k]*B[k][j];return C;}
+const rX=a=>[[1,0,0],[0,Math.cos(a),-Math.sin(a)],[0,Math.sin(a),Math.cos(a)]];
+const rY=a=>[[Math.cos(a),0,Math.sin(a)],[0,1,0],[-Math.sin(a),0,Math.cos(a)]];
+const rZ=a=>[[Math.cos(a),-Math.sin(a),0],[Math.sin(a),Math.cos(a),0],[0,0,1]];
+const aM=(M,v)=>[M[0][0]*v[0]+M[0][1]*v[1]+M[0][2]*v[2],M[1][0]*v[0]+M[1][1]*v[1]+M[1][2]*v[2],M[2][0]*v[0]+M[2][1]*v[1]+M[2][2]*v[2]];
+const vdot=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0);
+const vnrm=a=>{const l=Math.sqrt(a.reduce((s,v)=>s+v*v,0))||1;return a.map(v=>v/l);};
+const vsub=(a,b)=>a.map((v,i)=>v-b[i]);
+const cross3=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const len3=p=>Math.sqrt(p[0]*p[0]+p[1]*p[1]+p[2]*p[2]);
+const clamp=(x,a,b)=>x<a?a:x>b?b:x;
+const FOV=340;
+const prj=v=>{const z=v[2]+FOV;const s=FOV/Math.max(z,2);return[v[0]*s,v[1]*s,v[2]];};
+const LDIR=vnrm([0.5,0.85,0.65]);
+function vBright(n){const d=Math.max(0,vdot(n,LDIR));const rl=n.map((x,i)=>2*vdot(n,LDIR)*x-LDIR[i]);return Math.min(1,0.17+0.72*d+Math.pow(Math.max(0,-rl[2]),22)*0.22);}
+
+// ---- 4D ROTATION ----
+// Rotate in all three w-planes at incommensurate rates from one master angle a.
+// This swings the slicing direction through every orientation relative to the
+// polytope, so the cross-section sweeps its full range (point, tetra, octa, ...).
+const r4_XW=(v,c,s)=>[c*v[0]+s*v[3],v[1],v[2],-s*v[0]+c*v[3]];
+const r4_YW=(v,c,s)=>[v[0],c*v[1]+s*v[3],v[2],-s*v[1]+c*v[3]];
+const r4_ZW=(v,c,s)=>[v[0],v[1],c*v[2]+s*v[3],-s*v[2]+c*v[3]];
+function rot4(v,a){let q=r4_XW(v,Math.cos(a),Math.sin(a));q=r4_YW(q,Math.cos(a*0.78),Math.sin(a*0.78));q=r4_ZW(q,Math.cos(a*0.57),Math.sin(a*0.57));return q;}
+
+// ---- SLICING: intersect 4-polytope with {x . [0,0,0,1] = s}, project to xyz ----
+const XYZB=[[1,0,0,0],[0,1,0,0],[0,0,1,0]];
+function sliceTo3D(verts,edges,s){
+  const tol=1e-6,pts=[];
+  for(let i=0;i<verts.length;i++){const fw=verts[i][3]-s;if(Math.abs(fw)<tol)pts.push([verts[i][0],verts[i][1],verts[i][2]]);}
+  for(const[a,b]of edges){
+    const fa=verts[a][3]-s,fb=verts[b][3]-s;
+    if(Math.abs(fa)<tol||Math.abs(fb)<tol)continue;
+    if((fa<0)!==(fb<0)){const t=fa/(fa-fb);pts.push([verts[a][0]+t*(verts[b][0]-verts[a][0]),verts[a][1]+t*(verts[b][1]-verts[a][1]),verts[a][2]+t*(verts[b][2]-verts[a][2])]);}
+  }
+  // Merge near-coincident crossings. When the cut grazes a vertex (where several
+  // edges meet) their crossing points collapse into a tight cluster; without a
+  // tolerance band those survive as distinct points and the hull turns
+  // non-manifold. A 1e-3 band (far above the grazing scale, well below genuine
+  // vertex spacing) keeps every slice a clean solid. See reference 9.2 / 12.
+  const out=[];
+  for(const p of pts){let dup=false;for(const q of out){const dx=q[0]-p[0],dy=q[1]-p[1],dz=q[2]-p[2];if(dx*dx+dy*dy+dz*dz<1e-6){dup=true;break;}}if(!dup)out.push(p);}
+  return out;
+}
+function center3(P){if(!P.length)return;const c=[0,0,0];for(const p of P){c[0]+=p[0];c[1]+=p[1];c[2]+=p[2];}c[0]/=P.length;c[1]/=P.length;c[2]/=P.length;for(const p of P){p[0]-=c[0];p[1]-=c[1];p[2]-=c[2];}}
+
+// ---- CONVEX HULL -> POLYGON FACES (handles flat laminae) ----
+function planeNormal(P){
+  // returns a normal if all points are coplanar, else null
+  let n=null;
+  for(let i=1;i<P.length-1&&!n;i++){const c=cross3(vsub(P[i],P[0]),vsub(P[i+1],P[0]));if(len3(c)>1e-6)n=vnrm(c);}
+  if(!n)return[0,0,1];
+  const d=vdot(n,P[0]);
+  for(const p of P)if(Math.abs(vdot(n,p)-d)>1e-4)return null;
+  return n;
+}
+function orderLoop(P,idx,n){
+  const c=[0,0,0];for(const i of idx){c[0]+=P[i][0];c[1]+=P[i][1];c[2]+=P[i][2];}c[0]/=idx.length;c[1]/=idx.length;c[2]/=idx.length;
+  let u=cross3(n,[0,0,1]);if(len3(u)<1e-6)u=cross3(n,[0,1,0]);u=vnrm(u);
+  const v=vnrm(cross3(n,u));
+  return idx.slice().sort((a,b)=>Math.atan2(vdot(vsub(P[a],c),v),vdot(vsub(P[a],c),u))-Math.atan2(vdot(vsub(P[b],c),v),vdot(vsub(P[b],c),u)));
+}
+function hull3(P){
+  const n=P.length;
+  if(n<3)return{faces:[],flat:true};
+  const flatN=planeNormal(P);
+  if(flatN){const loop=orderLoop(P,P.map((_,i)=>i),flatN);return{faces:[{loop,n:flatN}],flat:true};}
+  // 3D hull: collect outward triangles
+  const tris=[],eps=1e-6;
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)for(let k=j+1;k<n;k++){
+    let nr=cross3(vsub(P[j],P[i]),vsub(P[k],P[i]));const L=len3(nr);if(L<1e-7)continue;nr=nr.map(x=>x/L);
+    const d=vdot(nr,P[i]);let pos=false,neg=false;
+    for(let m=0;m<n;m++){if(m===i||m===j||m===k)continue;const sd=vdot(nr,P[m])-d;if(sd>eps)pos=true;else if(sd<-eps)neg=true;}
+    if(pos&&neg)continue;
+    if(pos){nr=nr.map(x=>-x);tris.push({t:[i,k,j],n:nr,d:-d});}else tris.push({t:[i,j,k],n:nr,d});
+  }
+  // merge coplanar tris into polygon faces
+  const planes=[];
+  for(const t of tris){let g=planes.find(p=>vdot(p.n,t.n)>0.9995&&Math.abs(p.d-t.d)<1.5e-3);if(!g){g={n:t.n,d:t.d,vs:new Set()};planes.push(g);}t.t.forEach(i=>g.vs.add(i));}
+  const faces=[];
+  for(const g of planes){if(g.vs.size<3)continue;faces.push({loop:orderLoop(P,[...g.vs],g.n),n:g.n});}
+  return{faces,flat:false};
+}
+
+// ---- 4D POLYTOPE GENERATORS (centered at origin) ----
+function recenter4(V){const c=[0,0,0,0];for(const v of V)for(let k=0;k<4;k++)c[k]+=v[k];for(let k=0;k<4;k++)c[k]/=V.length;return V.map(v=>v.map((x,k)=>x-c[k]));}
+function edgesByDist(V,d){const E=[];for(let i=0;i<V.length;i++)for(let j=i+1;j<V.length;j++){let s=0;for(let k=0;k<4;k++)s+=(V[i][k]-V[j][k])**2;if(Math.abs(Math.sqrt(s)-d)<1e-4)E.push([i,j]);}return E;}
+function genTess(){const V=[];for(let i=0;i<16;i++)V.push([(i&1)?1:-1,(i&2)?1:-1,(i&4)?1:-1,(i&8)?1:-1]);const E=[];for(let i=0;i<16;i++)for(let b=0;b<4;b++){const j=i^(1<<b);if(i<j)E.push([i,j]);}return{V,E};}
+function gen16(){const V=[];for(let i=0;i<4;i++)for(const s of[1,-1]){const v=[0,0,0,0];v[i]=s;V.push(v);}return{V,E:edgesByDist(V,Math.SQRT2)};}
+function gen5(){const r=1/Math.sqrt(5);const V=recenter4([[1,1,1,-r],[1,-1,-1,-r],[-1,1,-1,-r],[-1,-1,1,-r],[0,0,0,4*r]]);const E=[];for(let i=0;i<5;i++)for(let j=i+1;j<5;j++)E.push([i,j]);return{V,E};}
+function gen24(){const V=[];for(let i=0;i<4;i++)for(let j=i+1;j<4;j++)for(const si of[1,-1])for(const sj of[1,-1]){const v=[0,0,0,0];v[i]=si;v[j]=sj;V.push(v);}return{V,E:edgesByDist(V,Math.SQRT2)};}
+function genDuo(p,q){const V=[];for(let i=0;i<p;i++)for(let j=0;j<q;j++){const a=2*Math.PI*i/p,b=2*Math.PI*j/q;V.push([Math.cos(a),Math.sin(a),Math.cos(b),Math.sin(b)]);}const E=[],id=(i,j)=>i*q+j;for(let i=0;i<p;i++)for(let j=0;j<q;j++){E.push([id(i,j),id((i+1)%p,j)]);E.push([id(i,j),id(i,(j+1)%q)]);}return{V,E};}
+
+// ---- 4D SHAPE TABLE (real, sliceable shapes only) ----
+const INF='\u221e';
+const SH4=[
+  {name:'5-Cell (4-Simplex)',v:5,e:10,f:10,c:5,gen:gen5},
+  {name:'8-Cell (Tesseract)',v:16,e:32,f:24,c:8,gen:genTess},
+  {name:'16-Cell',v:8,e:24,f:32,c:16,gen:gen16},
+  {name:'24-Cell',v:24,e:96,f:96,c:24,gen:gen24},
+  {name:'Duoprism (3,3)',v:9,e:18,f:15,c:6,gen:()=>genDuo(3,3)},
+  {name:'Duoprism (4,4)',v:16,e:32,f:24,c:8,gen:()=>genDuo(4,4)},
+  {name:'Duoprism (5,5)',v:25,e:50,f:35,c:10,gen:()=>genDuo(5,5)},
+  {name:'Duoprism (6,6)',v:36,e:72,f:48,c:12,gen:()=>genDuo(6,6)},
+  {name:'Glome (3-Sphere)',v:INF,e:INF,f:INF,c:INF,sphere:true},
+];
+// The Shape slider scales by CELLS (the count of 3D boundary pieces) — the 4D
+// analog of ordering a polyhedron by its faces. Sliding right grows the cell
+// count through every sliceable polytope until the glome (infinitely many).
+const cellKey=s=>s.c===INF?Infinity:s.c;
+SH4.sort((a,b)=>cellKey(a)-cellKey(b)||a.v-b.v);
+// Precompute geometry + a fixed reference radius (max mid-slice radius over sample rotations).
+for(const s of SH4){
+  if(s.sphere){s.refR=1;continue;}
+  const g=s.gen();s.V=g.V;s.E=g.E;
+  let ref=0;
+  for(let t=0;t<48;t++){
+    const RV=s.V.map(v=>rot4(v,t*0.13));
+    const P=sliceTo3D(RV,s.E,0.0007);if(P.length<3)continue;center3(P);
+    for(const p of P)ref=Math.max(ref,len3(p));
+  }
+  s.refR=ref||1;
+}
+
+// ---- 3D POLYHEDRA (vertices + polygon faces, outward wound) ----
+const PHI=(1+Math.sqrt(5))/2;
+function prep(rawV,rawF){
+  const mr=Math.max(...rawV.map(len3))||1;
+  const v=rawV.map(u=>[u[0]/mr,u[1]/mr,u[2]/mr]);
+  const faces=rawF.map(face=>{
+    const a=v[face[0]],b=v[face[1]],c=v[face[2]];
+    const n=cross3(vsub(b,a),vsub(c,a));
+    const fc=[0,0,0];face.forEach(i=>{fc[0]+=v[i][0];fc[1]+=v[i][1];fc[2]+=v[i][2];});
+    const loop=(vdot(n,fc)>0)?face.slice():face.slice().reverse();
+    const nn=vnrm(cross3(vsub(v[loop[1]],v[loop[0]]),vsub(v[loop[2]],v[loop[0]])));
+    return{loop,n:nn};
+  });
+  return{v,faces};
+}
+function genPrism(nn){const rawV=[],rawF=[];for(let i=0;i<nn;i++){const a=2*Math.PI*i/nn;rawV.push([Math.cos(a),Math.sin(a),1]);}for(let i=0;i<nn;i++){const a=2*Math.PI*i/nn;rawV.push([Math.cos(a),Math.sin(a),-1]);}rawF.push(Array.from({length:nn},(_,i)=>i));rawF.push(Array.from({length:nn},(_,i)=>2*nn-1-i));for(let i=0;i<nn;i++){const j=(i+1)%nn;rawF.push([i,j,nn+j,nn+i]);}return prep(rawV,rawF);}
+const POLY3=[
+  prep([[1,1,1],[1,-1,-1],[-1,1,-1],[-1,-1,1]],[[0,2,1],[0,1,3],[0,3,2],[1,2,3]]),
+  prep([[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]],[[0,3,2,1],[4,5,6,7],[0,1,5,4],[2,3,7,6],[1,2,6,5],[0,4,7,3]]),
+  prep([[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]],[[0,2,4],[2,1,4],[1,3,4],[3,0,4],[0,5,2],[2,5,1],[1,5,3],[3,5,0]]),
+  genPrism(3),genPrism(5),genPrism(6),genPrism(8),
+  prep([[1,1,1],[1,1,-1],[1,-1,1],[1,-1,-1],[-1,1,1],[-1,1,-1],[-1,-1,1],[-1,-1,-1],[0,1/PHI,PHI],[0,-1/PHI,PHI],[0,1/PHI,-PHI],[0,-1/PHI,-PHI],[1/PHI,PHI,0],[-1/PHI,PHI,0],[1/PHI,-PHI,0],[-1/PHI,-PHI,0],[PHI,0,1/PHI],[PHI,0,-1/PHI],[-PHI,0,1/PHI],[-PHI,0,-1/PHI]],[[0,8,4,13,12],[0,8,9,2,16],[0,12,1,17,16],[1,10,5,13,12],[1,10,11,3,17],[2,14,3,17,16],[2,9,6,15,14],[3,11,7,15,14],[4,18,6,9,8],[4,18,19,5,13],[5,19,7,11,10],[6,15,7,19,18]]),
+  prep([[0,1,PHI],[0,-1,PHI],[0,1,-PHI],[0,-1,-PHI],[1,PHI,0],[-1,PHI,0],[1,-PHI,0],[-1,-PHI,0],[PHI,0,1],[PHI,0,-1],[-PHI,0,1],[-PHI,0,-1]],[[0,1,8],[0,8,4],[0,4,5],[0,5,10],[0,10,1],[3,2,11],[3,11,7],[3,7,6],[3,6,9],[3,9,2],[1,6,8],[8,9,4],[4,2,5],[5,11,10],[10,7,1],[6,1,7],[7,10,11],[2,5,11],[9,8,6],[2,4,9]]),
+  prep([[0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1],[1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0]],[[0,4,8],[2,6,8],[1,4,10],[3,6,10],[0,5,9],[2,7,9],[1,5,11],[3,7,11],[0,4,1,5],[2,6,3,7],[4,8,6,10],[5,9,7,11],[0,8,2,9],[1,10,3,11]]),
+];
+// Each entry carries its own geometry (poly) so the table can be reordered freely.
+const SH3=[
+  {name:'Tetrahedron',v:4,e:6,f:4,poly:POLY3[0]},
+  {name:'Cube',v:8,e:12,f:6,poly:POLY3[1]},
+  {name:'Octahedron',v:6,e:12,f:8,poly:POLY3[2]},
+  {name:'Triangular Prism',v:6,e:9,f:5,poly:POLY3[3]},
+  {name:'Pentagonal Prism',v:10,e:15,f:7,poly:POLY3[4]},
+  {name:'Hexagonal Prism',v:12,e:18,f:8,poly:POLY3[5]},
+  {name:'Octagonal Prism',v:16,e:24,f:10,poly:POLY3[6]},
+  {name:'Dodecahedron',v:20,e:30,f:12,poly:POLY3[7]},
+  {name:'Icosahedron',v:12,e:30,f:20,poly:POLY3[8]},
+  {name:'Cuboctahedron',v:12,e:24,f:14,poly:POLY3[9]},
+  {name:'Sphere',v:INF,e:INF,f:INF,sphere:true},
+];
+// The Shape slider scales by FACES: sliding right grows the face count through
+// every closed (manifold) polyhedron until the sphere (infinitely many faces).
+const faceKey=s=>s.f===INF?Infinity:s.f;
+SH3.sort((a,b)=>faceKey(a)-faceKey(b)||a.v-b.v);
+
+// Shape sliders are now discrete: one notch per shape, indexed straight through
+// the (face/cell-ordered) tables. Each notch is therefore a valid manifold solid.
+const idx3=sv=>clamp(Math.round(sv),0,SH3.length-1);
+const idx4=sv=>clamp(Math.round(sv),0,SH4.length-1);
+
+// ---- STATE ----
+let dim=2,sandbox=false,objects=[],dragging=null,dvx=0,dvy=0,lmx=0,lmy=0;
+const GRAV=0.28,FRIC=0.988,BNC=0.52;
+const p={1:{len:5},2:{sides:4,size:70},3:{sv:0,size:65},4:{sv:0,size:50}};
+p[3].sv=Math.max(0,SH3.findIndex(s=>s.name==='Cube'));        // default 3D: the cube
+p[4].sv=Math.max(0,SH4.findIndex(s=>/Tesseract/.test(s.name)));// default 4D: the tesseract
+
+// ---- STATS / CONTROLS ----
+function dimInfo(){
+  if(dim===1)return{v:2,e:1,f:0,c:0};
+  if(dim===2){const n=p[2].sides;return{v:n,e:n,f:1,c:0};}
+  if(dim===3){const s=SH3[idx3(p[3].sv)];return{v:s.v,e:s.e,f:s.f,c:0};}
+  const s=SH4[idx4(p[4].sv)];return{v:s.v,e:s.e,f:s.f,c:s.c};
+}
+function updateStats(){
+  const d=dimInfo();
+  document.getElementById('sv').textContent=d.v;document.getElementById('se').textContent=d.e;
+  document.getElementById('sf').textContent=d.f;document.getElementById('sc').textContent=d.c;
+  document.getElementById('ts-d').textContent=dim;document.getElementById('ts-v').textContent=d.v;
+  document.getElementById('ts-e').textContent=d.e;document.getElementById('ts-f').textContent=d.f;
+}
+function curName(){return dim===3?SH3[idx3(p[3].sv)].name:dim===4?SH4[idx4(p[4].sv)].name:'';}
+function updateName(){const b=document.getElementById('sname');if(b)b.textContent=curName();}
+function buildControls(){
+  const ca=document.getElementById('ca');ca.innerHTML='';
+  if(dim===3||dim===4){const nb=document.createElement('div');nb.className='snbox';nb.innerHTML='<div class="snlbl">'+(dim===3?'Polyhedron':'4D Polytope')+'</div><div class="snval" id="sname">'+curName()+'</div>';ca.appendChild(nb);}
+  function ctrl(lbl,id,min,max,val,fn,fmt){
+    const disp=x=>fmt?fmt(x):x;
+    const d=document.createElement('div');d.className='ctrl';
+    d.innerHTML='<div class="clbl">'+lbl+'<span class="cval" id="'+id+'-o">'+disp(val)+'</span></div><input type="range" id="'+id+'" min="'+min+'" max="'+max+'" value="'+val+'">';
+    ca.appendChild(d);
+    document.getElementById(id).addEventListener('input',function(){document.getElementById(id+'-o').textContent=disp(+this.value);fn(+this.value);updateStats();updateName();});
+  }
+  if(dim===1)ctrl('Length','l1',1,20,p[1].len,v=>p[1].len=v);
+  if(dim===2){ctrl('Sides','l2s',3,64,p[2].sides,v=>p[2].sides=v);ctrl('Radius','l2r',30,110,p[2].size,v=>p[2].size=v);}
+  if(dim===3){ctrl('Shape','l3v',0,SH3.length-1,p[3].sv,v=>p[3].sv=v,v=>{const s=SH3[idx3(v)];return s.sphere?INF+' faces':s.f+' faces';});ctrl('Size','l3z',30,100,p[3].size,v=>p[3].size=v);}
+  if(dim===4){ctrl('Shape','l4v',0,SH4.length-1,p[4].sv,v=>p[4].sv=v,v=>{const s=SH4[idx4(v)];return s.sphere?INF+' cells':s.c+' cells';});ctrl('Size','l4z',20,80,p[4].size,v=>p[4].size=v);}
+  updateStats();
+}
+document.querySelectorAll('.dtab').forEach(t=>t.addEventListener('click',function(){document.querySelectorAll('.dtab').forEach(x=>x.classList.remove('on'));this.classList.add('on');dim=+this.dataset.d;buildControls();}));
+
+// ---- CAPTIONS ----
+const COLL_DESC={
+  '1+1':'Two 1D segments are almost always skew in 3D. They barely interact unless aimed to cross.',
+  '1+2':'The rod meets the sheet at a point. The sheet stops the rod. The rod is no barrier to the sheet.',
+  '1+3':'The solid carries or deflects the thin rod. The rod offers the solid no resistance.',
+  '1+4':'The rod is briefly shoved by the 4D cross-section passing through.',
+  '2+2':'Two sheets cross along a line. Face to face they wedge and stack.',
+  '2+3':'The sheet walls the solid. The solid bounces off its face.',
+  '2+4':'The sheet briefly deflects the 4D cross-section, which routes around through its fourth axis.',
+  '3+3':'Two solids bounce over a surface patch. Standard contact with one normal.',
+  '3+4':'Direct contact deflects both. The 4D shape can route around the barrier through its fourth axis.',
+  '4+4':'Two 4D cross-sections shove each other, then route around through the fourth dimension.',
+  'routing':'The 4D cross-section is shrinking. The shape is routing around through its fourth axis.',
+};
+let cap={text:'',pair:'',timer:0};
+function setCaption(key,pair){cap.pair=pair||key;cap.text=COLL_DESC[key]||key;cap.timer=260;}
+function drawCaption(){
+  if(cap.timer<=0)return;cap.timer--;
+  const alpha=Math.min(1,cap.timer/40),{fr,fg,fb}=acRGB(),pad=10,bh=46,by=H-8;
+  ctx.save();ctx.globalAlpha=alpha;
+  ctx.fillStyle='rgba(4,6,14,0.93)';ctx.beginPath();ctx.roundRect(pad,by-bh,W-pad*2,bh,4);ctx.fill();
+  ctx.strokeStyle='rgba('+fr+','+fg+','+fb+',0.22)';ctx.lineWidth=0.6;ctx.beginPath();ctx.roundRect(pad,by-bh,W-pad*2,bh,4);ctx.stroke();
+  ctx.fillStyle='rgba('+fr+','+fg+','+fb+',0.95)';ctx.font='600 8px "Share Tech Mono"';ctx.textAlign='left';ctx.fillText(cap.pair.toUpperCase(),pad+10,by-bh+14);
+  ctx.fillStyle='rgba(200,212,232,0.75)';ctx.font='500 11px "Rajdhani"';ctx.fillText(cap.text.substring(0,Math.floor((W-pad*2-20)/6.5)),pad+10,by-10);
+  ctx.restore();
+}
+
+// ---- SOLID RENDERER (3D shapes + 4D cross-sections) ----
+function drawSolid(cx,cy,V3,hres,sc,mat){
+  const{fr,fg,fb}=acRGB();
+  const world=V3.map(v=>aM(mat,[v[0]*sc,v[1]*sc,v[2]*sc]));
+  const scr=world.map(prj);
+  const twoSided=hres.flat;
+  const vis=[];
+  for(const f of hres.faces){
+    const lp=f.loop;if(lp.length<3)continue;
+    let area=0;for(let k=0;k<lp.length;k++){const A=scr[lp[k]],B=scr[lp[(k+1)%lp.length]];area+=A[0]*B[1]-B[0]*A[1];}
+    if(!twoSided&&area>=0)continue;// back-face cull for closed solids
+    let nr=aM(mat,f.n);
+    const b=twoSided?Math.max(vBright(nr),vBright(nr.map(x=>-x))):vBright(nr);
+    let depth=0;for(const i of lp)depth+=world[i][2];depth/=lp.length;
+    vis.push({lp,b,depth});
+  }
+  vis.sort((a,b)=>b.depth-a.depth);
+  for(const o of vis){
+    ctx.beginPath();
+    for(let k=0;k<o.lp.length;k++){const s=scr[o.lp[k]];if(k)ctx.lineTo(cx+s[0],cy+s[1]);else ctx.moveTo(cx+s[0],cy+s[1]);}
+    ctx.closePath();
+    const b=o.b;
+    ctx.fillStyle='rgb('+((fr*b*.42)|0)+','+((fg*b)|0)+','+((fb*b*.78)|0)+')';ctx.fill();
+    ctx.strokeStyle='rgba('+fr+','+fg+','+fb+',0.5)';ctx.lineWidth=1;ctx.lineJoin='round';ctx.stroke();
+  }
+}
+function drawSphere(cx,cy,r,mat){
+  if(r<1)return;const{fr,fg,fb}=acRGB();
+  const g=ctx.createRadialGradient(cx-r*.3,cy-r*.34,r*.05,cx,cy,r);
+  g.addColorStop(0,'rgb('+Math.min(255,fr+90)+','+Math.min(255,fg+24)+','+Math.min(255,fb+60)+')');
+  g.addColorStop(.5,'rgb('+((fr*.55)|0)+','+((fg*.88)|0)+','+((fb*.82)|0)+')');
+  g.addColorStop(1,'rgb('+((fr*.08)|0)+','+((fg*.18)|0)+','+((fb*.15)|0)+')');
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+  const planes=[[[1,0,0],[0,1,0]],[[0,1,0],[0,0,1]],[[0,0,1],[1,0,0]]];ctx.lineWidth=1;
+  for(const[u,v]of planes){ctx.beginPath();for(let a=0;a<=48;a++){const th=a/48*Math.PI*2;const pt=[r*(Math.cos(th)*u[0]+Math.sin(th)*v[0]),r*(Math.cos(th)*u[1]+Math.sin(th)*v[1]),r*(Math.cos(th)*u[2]+Math.sin(th)*v[2])];const sp=prj(aM(mat,pt));if(a)ctx.lineTo(cx+sp[0],cy+sp[1]);else ctx.moveTo(cx+sp[0],cy+sp[1]);}ctx.strokeStyle='rgba('+fr+','+fg+','+fb+',0.4)';ctx.stroke();}
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='rgba('+fr+','+fg+','+fb+',0.6)';ctx.lineWidth=1.2;ctx.stroke();
+}
+function drawGhostRing(cx,cy,size){const{fr,fg,fb}=acRGB();const r=size*0.4;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='rgba('+fr+','+fg+','+fb+',0.18)';ctx.lineWidth=0.8;ctx.setLineDash([3,4]);ctx.stroke();ctx.setLineDash([]);}
+
+// ---- 4D OBJECT: rotate in 4D, slice, build the 3D cross-section ----
+function build4(o){
+  const sh=SH4[idx4(o.p.sv)];
+  if(sh.sphere){
+    // A glome is rotation-invariant, so tumbling it in 4D never changes its slice.
+    // To make it morph like the polytopes do, sweep the cut offset along w from the
+    // same 4D clock (a4): the section of x^2+y^2+z^2+w^2=1 at w=d is a 2-sphere of
+    // radius sqrt(1-d^2) (reference 7.5). Routing (wofs) adds on top; the offset is
+    // clamped so the glome always pulses but never collapses out of view.
+    const w=clamp(0.82*Math.sin(o.a4||0)+(o.wofs||0),-0.97,0.97);
+    const r=Math.sqrt(Math.max(0,1-w*w));
+    return{sphere:true,r:r*o.p.size,refRrad:o.p.size};
+  }
+  const RV=sh.V.map(v=>rot4(v,o.a4||0));
+  const P=sliceTo3D(RV,sh.E,(o.wofs||0)+0.0007);
+  if(P.length<3)return{empty:true};
+  center3(P);
+  let maxr=0;for(const q of P)maxr=Math.max(maxr,len3(q));
+  return{P,hull:hull3(P),sc:o.p.size/sh.refR,rad:(maxr/sh.refR)*o.p.size};
+}
+function draw4Obj(cx,cy,o){
+  const g=o._g||build4(o);
+  if(g.sphere){if(g.r<1.2){drawGhostRing(cx,cy,o.p.size);return;}drawSphere(cx,cy,g.r,o.mat||I3());return;}
+  if(g.empty||!g.hull.faces.length){drawGhostRing(cx,cy,o.p.size);return;}
+  drawSolid(cx,cy,g.P,g.hull,g.sc,o.mat||I3());
+}
+
+// ---- COLLISION RADIUS ----
+const COLL_MASS={1:0.12,2:0.42,3:1.0,4:1.35};
+function getCR(o){
+  if(o.dim===1)return 14;
+  if(o.dim===2)return o.p.size||60;
+  if(o.dim===3)return Math.max((o.p.size||50)*0.9,24);
+  // 4D: use the live cross-section radius, floored so it never collapses
+  const g=o._g||build4(o);
+  const base=g.sphere?g.r:(g.empty?0:g.rad);
+  return Math.max(base,(o.p.size||50)*0.34);
+}
+// Contact dimension a+b-n in the visible n=3 room (reference 10.1). A 4D body
+// acts through its current 3D cross-section (reference 10.5), so its footprint in
+// the room is 3D: use min(dim,3). cd<0 (only 1D+1D, two skew lines) means the
+// parts generically miss; otherwise higher cd = a more solid, fuller contact.
+function getCollParams(da,db){const ea=Math.min(da,3),eb=Math.min(db,3),cd=ea+eb-3;const ff=cd<0?0.05:Math.min(1,0.28+cd*0.24);const ma=COLL_MASS[da],mb=COLL_MASS[db],tot=ma+mb;return{ff,rA:mb/tot,rB:ma/tot,cd};}
+
+// ---- SHAPE-ACCURATE COLLISION ----
+// An object's real footprint on screen is a convex polygon (its projected
+// silhouette) or a circle (sphere/glome), built from the SAME projection used to
+// draw it. So the hitbox IS the lit shape: flat faces meet flush, a vertex pokes
+// in, a sphere touches at a point. A 4D body collides through its current 3D
+// cross-section's silhouette (reference 10.5). Convex shapes -> SAT / circle tests.
+function hull2(P){
+  if(P.length<3)return P.slice();
+  const S=P.slice().sort((a,b)=>a[0]-b[0]||a[1]-b[1]);
+  const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);
+  const lo=[];for(const p of S){while(lo.length>=2&&cr(lo[lo.length-2],lo[lo.length-1],p)<=0)lo.pop();lo.push(p);}
+  const hi=[];for(let i=S.length-1;i>=0;i--){const p=S[i];while(hi.length>=2&&cr(hi[hi.length-2],hi[hi.length-1],p)<=0)hi.pop();hi.push(p);}
+  lo.pop();hi.pop();return lo.concat(hi);
+}
+function projSil(V3,sc,mat){return V3.map(v=>{const q=prj(aM(mat,[v[0]*sc,v[1]*sc,v[2]*sc]));return[q[0],q[1]];});}
+// Local (object-centred) footprint: {poly,rad,ext} for solids or {rad,ext} for circles.
+function silhouette(o){
+  const mat=o.mat||I3();let poly=null,cr=0;
+  if(o.dim===1){const len=o.p.len*14,c=Math.cos(o.angle||0),s=Math.sin(o.angle||0),th=4,hx=c*len/2,hy=s*len/2,ox=-s*th,oy=c*th;poly=[[hx+ox,hy+oy],[hx-ox,hy-oy],[-hx-ox,-hy-oy],[-hx+ox,-hy+oy]];}
+  else if(o.dim===2){const n=o.p.sides,r=o.p.size;poly=[];for(let i=0;i<n;i++){const a=(o.angle||0)+2*Math.PI*i/n-Math.PI/2;poly.push([r*Math.cos(a),r*Math.sin(a)]);}}
+  else if(o.dim===3){const s=SH3[idx3(o.p.sv)];if(s.sphere)cr=(o.p.size||50)*0.9;else poly=hull2(projSil(s.poly.v,(o.p.size||50)*0.9,mat));}
+  else{const g=o._g||build4(o);if(g.sphere)cr=Math.max(g.r,2);else if(g.empty||!g.P)cr=(o.p.size||50)*0.34;else poly=hull2(projSil(g.P,g.sc,mat));}
+  if(poly&&poly.length<3){let rad=0;for(const pt of poly)rad=Math.max(rad,Math.hypot(pt[0],pt[1]));cr=Math.max(rad,4);poly=null;}// edge-on view -> circle fallback
+  if(cr)return{rad:cr,ext:{l:-cr,r:cr,t:-cr,b:cr}};
+  let l=0,r=0,t=0,b=0,rad=0;for(const pt of poly){if(pt[0]<l)l=pt[0];if(pt[0]>r)r=pt[0];if(pt[1]<t)t=pt[1];if(pt[1]>b)b=pt[1];const d=pt[0]*pt[0]+pt[1]*pt[1];if(d>rad)rad=d;}
+  return{poly,rad:Math.sqrt(rad),ext:{l,r,t,b}};
+}
+const centroid2=P=>{let x=0,y=0;for(const p of P){x+=p[0];y+=p[1];}return[x/P.length,y/P.length];};
+const supportPt=(P,nx,ny)=>{let best=-Infinity,bp=P[0];for(const p of P){const d=p[0]*nx+p[1]*ny;if(d>best){best=d;bp=p;}}return bp;};
+const closestSeg=(px,py,a,b)=>{const abx=b[0]-a[0],aby=b[1]-a[1];const t=clamp(((px-a[0])*abx+(py-a[1])*aby)/((abx*abx+aby*aby)||1),0,1);return[a[0]+abx*t,a[1]+aby*t];};
+function pointInConvex(px,py,P){let sign=0;for(let i=0;i<P.length;i++){const a=P[i],b=P[(i+1)%P.length];const cr=(b[0]-a[0])*(py-a[1])-(b[1]-a[1])*(px-a[0]);if(cr!==0){const s=cr>0?1:-1;if(sign===0)sign=s;else if(s!==sign)return false;}}return true;}
+// Separating-axis test for two convex polygons -> {n(A->B),depth,contact} or null.
+function satPP(A,B){
+  let mo=Infinity,nx=0,ny=0;
+  for(let s=0;s<2;s++){const P=s?B:A;for(let i=0;i<P.length;i++){const p1=P[i],p2=P[(i+1)%P.length];let ax=-(p2[1]-p1[1]),ay=p2[0]-p1[0];const L=Math.hypot(ax,ay)||1;ax/=L;ay/=L;
+    let a0=Infinity,a1=-Infinity,b0=Infinity,b1=-Infinity;
+    for(const p of A){const d=p[0]*ax+p[1]*ay;if(d<a0)a0=d;if(d>a1)a1=d;}
+    for(const p of B){const d=p[0]*ax+p[1]*ay;if(d<b0)b0=d;if(d>b1)b1=d;}
+    const ov=Math.min(a1,b1)-Math.max(a0,b0);if(ov<=0)return null;if(ov<mo){mo=ov;nx=ax;ny=ay;}}}
+  const ca=centroid2(A),cb=centroid2(B);if((cb[0]-ca[0])*nx+(cb[1]-ca[1])*ny<0){nx=-nx;ny=-ny;}
+  const pa=supportPt(A,nx,ny),pb=supportPt(B,-nx,-ny);
+  return{nx,ny,depth:mo,cpx:(pa[0]+pb[0])/2,cpy:(pa[1]+pb[1])/2};
+}
+function hitCirclePoly(cx,cy,r,B){
+  let bd=Infinity,cl=null;for(let i=0;i<B.length;i++){const q=closestSeg(cx,cy,B[i],B[(i+1)%B.length]);const dd=(cx-q[0])**2+(cy-q[1])**2;if(dd<bd){bd=dd;cl=q;}}
+  const d=Math.sqrt(bd);
+  if(pointInConvex(cx,cy,B)){const cb=centroid2(B);let nx=cb[0]-cx,ny=cb[1]-cy;const L=Math.hypot(nx,ny)||1;return{nx:nx/L,ny:ny/L,depth:r+d,cpx:cl[0],cpy:cl[1]};}
+  if(d>=r)return null;let nx=cl[0]-cx,ny=cl[1]-cy;const L=Math.hypot(nx,ny)||1;return{nx:nx/L,ny:ny/L,depth:r-d,cpx:cl[0],cpy:cl[1]};
+}
+const absP=(o,s)=>s.poly.map(p=>[o.x+p[0],o.y+p[1]]);
+function addSpin(o,d){if(o.dim===2)o.angVel=(o.angVel||0)+d;else if(o.avZ!==undefined)o.avZ+=d;}
+// Detect contact between two objects -> {nx,ny (unit, A->B), depth, cpx,cpy} or null.
+function contact(a,b){
+  const sa=a._sil,sb=b._sil;if(!sa||!sb)return null;
+  const dx=b.x-a.x,dy=b.y-a.y,br=sa.rad+sb.rad;if(dx*dx+dy*dy>br*br)return null;// broad phase
+  if(!sa.poly&&!sb.poly){const d=Math.hypot(dx,dy);if(d>=br||d<1e-6)return null;const nx=dx/d,ny=dy/d;return{nx,ny,depth:br-d,cpx:a.x+nx*sa.rad,cpy:a.y+ny*sa.rad};}
+  if(!sa.poly)return hitCirclePoly(a.x,a.y,sa.rad,absP(b,sb));
+  if(!sb.poly){const h=hitCirclePoly(b.x,b.y,sb.rad,absP(a,sa));if(h){h.nx=-h.nx;h.ny=-h.ny;}return h;}
+  return satPP(absP(a,sa),absP(b,sb));
+}
+function resolvePair(a,b){
+  const h=contact(a,b);if(!h)return;
+  const{ff,cd}=getCollParams(a.dim,b.dim);
+  if(cd<0&&Math.random()>0.16)return;// skew low-dimensional parts usually slip past
+  const invA=(a===dragging)?0:1/COLL_MASS[a.dim],invB=(b===dragging)?0:1/COLL_MASS[b.dim],tot=invA+invB;if(tot<=0)return;
+  const sa=a._sil,sb=b._sil,rA=invA/tot,rB=invB/tot,nx=h.nx,ny=h.ny;
+  const corr=Math.max(h.depth-0.5,0)*0.6;// positional split with slop -> stable, no jitter
+  a.x-=nx*corr*rA;a.y-=ny*corr*rA;b.x+=nx*corr*rB;b.y+=ny*corr*rB;
+  const dvn=(a.vx-b.vx)*nx+(a.vy-b.vy)*ny;// approach speed along the true contact normal
+  if(dvn>0){
+    const e=dvn<1.5?0:BNC;// drop restitution at low speed so resting shapes settle
+    const imp=dvn*ff*(1+e);
+    a.vx-=imp*nx*rA;a.vy-=imp*ny*rA;b.vx+=imp*nx*rB;b.vy+=imp*ny*rB;
+    // contact lever -> a little spin: flush face contact ~none, off-centre/point hit ~some
+    const tang=clamp(imp*0.012,0,0.6);
+    const la=(h.cpx-a.x)*ny-(h.cpy-a.y)*nx,lb=(h.cpx-b.x)*ny-(h.cpy-b.y)*nx;
+    addSpin(a,clamp(-la*tang/Math.max(20,sa.rad),-0.06,0.06));
+    addSpin(b,clamp( lb*tang/Math.max(20,sb.rad),-0.06,0.06));
+    if(dvn>2.4){
+      if(a.dim===4&&a.routeT<=0&&Math.random()<0.5){a.wTarget=0.55*(Math.random()>.5?1:-1);a.routeT=70;setCaption('routing','4D ROUTING AROUND');}
+      if(b.dim===4&&b.routeT<=0&&Math.random()<0.5){b.wTarget=0.55*(Math.random()>.5?1:-1);b.routeT=70;setCaption('routing','4D ROUTING AROUND');}
+    }
+    setCaption(Math.min(a.dim,b.dim)+'+'+Math.max(a.dim,b.dim),a.dim+'D  +  '+b.dim+'D  contact');
+  }
+}
+// Positional-only relaxation (no velocity change): extra passes clear deep stacks
+// in crowded scenes without pumping energy. Skips cd<0 (skew low-D parts pass through).
+function pushApart(a,b){
+  const{cd}=getCollParams(a.dim,b.dim);if(cd<0)return;
+  const h=contact(a,b);if(!h||h.depth<=0.5)return;
+  const invA=(a===dragging)?0:1/COLL_MASS[a.dim],invB=(b===dragging)?0:1/COLL_MASS[b.dim],tot=invA+invB;if(tot<=0)return;
+  const rA=invA/tot,rB=invB/tot,c=(h.depth-0.5)*0.8;
+  a.x-=h.nx*c*rA;a.y-=h.ny*c*rA;b.x+=h.nx*c*rB;b.y+=h.ny*c*rB;
+}
+// Floor/walls act on the silhouette's real extents, so a flat face rests flush
+// and a vertex rests on its point.
+function wallCollide(o,fl,cl){
+  const e=o._sil.ext;
+  if(o.y+e.b>fl){o.y=fl-e.b;if(o.vy>1.5)o.vy*=-BNC;else o.vy=0;o.vx*=.92;if(o.avZ!==undefined)o.avZ+=o.vx*.01;}
+  if(o.y+e.t<cl){o.y=cl-e.t;if(o.vy<0)o.vy*=-BNC;}
+  if(o.x+e.l<0){o.x=-e.l;if(o.vx<0)o.vx*=-BNC;}
+  if(o.x+e.r>W){o.x=W-e.r;if(o.vx>0)o.vx*=-BNC;}
+}
+function wallPos(o,fl,cl){const e=o._sil.ext;if(o.y+e.b>fl)o.y=fl-e.b;if(o.y+e.t<cl)o.y=cl-e.t;if(o.x+e.l<0)o.x=-e.l;if(o.x+e.r>W)o.x=W-e.r;}
+
+// ---- PHYSICS ----
+function spawnObj(){
+  const o={x:W/2+(Math.random()-.5)*110,y:H*.25,vx:(Math.random()-.5)*4,vy:0,dim,p:JSON.parse(JSON.stringify(p[dim])),angle:Math.random()*Math.PI*2,angVel:(Math.random()-.5)*.07};
+  if(dim>=3){o.mat=I3();o.avX=(Math.random()-.5)*.05;o.avY=(Math.random()-.5)*.05;o.avZ=(Math.random()-.5)*.03;}
+  if(dim===4){o.a4=Math.random()*6.28;o.av4=0.013*(Math.random()>.5?1:-1);o.wofs=0;o.wTarget=0;o.routeT=0;}
+  return o;
+}
+function physTick(){
+  const fl=H-46,cl=38;
+  for(const o of objects){
+    // 4D: advance the 4D rotation (this is what morphs the cross-section), ease routing offset
+    if(o.dim===4){
+      o.a4=(o.a4||0)+(o.av4||0);
+      if(o.routeT>0){o.routeT--;if(o.routeT===0)o.wTarget=0;}
+      o.wofs=(o.wofs||0)+((o.wTarget||0)-(o.wofs||0))*0.08;
+      o._g=build4(o);// cache this frame so draw + collision share geometry
+    }
+    // spin (3D + 4D both carry a 3D view matrix for throw spin)
+    if(o.mat){o.avX*=.982;o.avY*=.982;o.avZ*=.982;o.mat=mm(rZ(o.avZ),mm(rY(o.avY),mm(rX(o.avX),o.mat)));}
+    if(o.dim===2)o.angle=(o.angle||0)+(o.angVel||0);
+    o.angVel*=.99;
+    if(o!==dragging){
+      o.vy+=GRAV;o.vx*=FRIC;o.vy*=FRIC;
+      const sp=Math.hypot(o.vx,o.vy);if(sp>42){o.vx*=42/sp;o.vy*=42/sp;}// clamp speed -> no tunneling/blowups
+      o.x+=o.vx;o.y+=o.vy;
+    }
+    o._sil=silhouette(o);// this frame's true footprint (depends on rotation/morph, not position)
+  }
+  // velocity + first positional resolution (once, so restitution/spin apply once)
+  for(const o of objects)if(o!==dragging)wallCollide(o,fl,cl);
+  for(let i=0;i<objects.length;i++)for(let j=i+1;j<objects.length;j++)resolvePair(objects[i],objects[j]);
+  // extra positional relaxation passes (energy-free) to clear crowded stacks
+  for(let it=0;it<6;it++){
+    for(const o of objects)if(o!==dragging)wallPos(o,fl,cl);
+    for(let i=0;i<objects.length;i++)for(let j=i+1;j<objects.length;j++)pushApart(objects[i],objects[j]);
+  }
+}
+
+// ---- 1D / 2D DRAW ----
+function drawObj(cx,cy,o){
+  const{fr,fg,fb}=acRGB();
+  if(o.dim===1){
+    const len=o.p.len*14;ctx.strokeStyle=cssv('--acc');ctx.lineWidth=2;ctx.shadowBlur=4;ctx.shadowColor=cssv('--acc');
+    const c=Math.cos(o.angle||0),s=Math.sin(o.angle||0);
+    ctx.beginPath();ctx.moveTo(cx-c*len/2,cy-s*len/2);ctx.lineTo(cx+c*len/2,cy+s*len/2);ctx.stroke();ctx.shadowBlur=0;
+    [[cx-c*len/2,cy-s*len/2],[cx+c*len/2,cy+s*len/2]].forEach(pt=>{ctx.beginPath();ctx.arc(pt[0],pt[1],4,0,Math.PI*2);ctx.fillStyle=cssv('--acc');ctx.fill();});
+  }else if(o.dim===2){
+    const n=o.p.sides,r=o.p.size;ctx.beginPath();
+    for(let i=0;i<n;i++){const a=(o.angle||0)+2*Math.PI*i/n-Math.PI/2;const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);}
+    ctx.closePath();ctx.fillStyle='rgba('+fr+','+fg+','+fb+',.1)';ctx.fill();ctx.strokeStyle=cssv('--acc');ctx.lineWidth=1.4;ctx.stroke();
+  }else if(o.dim===3){
+    const s=SH3[idx3(o.p.sv)];
+    if(s.sphere)drawSphere(cx,cy,(o.p.size||50)*0.9,o.mat||I3());
+    else{const pl=s.poly;drawSolid(cx,cy,pl.v,{faces:pl.faces,flat:false},(o.p.size||50)*0.9,o.mat||I3());}
+  }else{
+    draw4Obj(cx,cy,o);
+  }
+}
+
+// ---- BACKGROUND ----
+function drawGrid(){ctx.strokeStyle=cssv('--grid');ctx.lineWidth=1;const gs=42;for(let x=0;x<W;x+=gs){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}for(let y=0;y<H;y+=gs){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}}
+function drawFloor(){const fc=cssv('--floor');ctx.strokeStyle=fc;ctx.lineWidth=1;ctx.setLineDash([5,8]);ctx.beginPath();ctx.moveTo(0,H-46);ctx.lineTo(W,H-46);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=fc;ctx.font='7px "Share Tech Mono"';ctx.textAlign='center';ctx.fillText('FLOOR BOUNDARY',W/2,H-30);}
+
+// ---- PREVIEW STATE ----
+let pMat=I3(),pRot=[0,0,0],pAV=[.006,.011,.004],pa4=0;
+function tickPrev(){pRot[0]+=pAV[0];pRot[1]+=pAV[1];pRot[2]+=pAV[2];pMat=mm(rZ(pRot[2]),mm(rY(pRot[1]),rX(pRot[0])));pa4+=0.013;}
+
+// ---- RENDER ----
+// The canvas is now scrollable content, so pause the loop when it leaves the
+// viewport (saves battery/CPU and protects scroll smoothness on long pages).
+let _inView=true;
+if('IntersectionObserver' in window){try{new IntersectionObserver(function(es){_inView=es[0].isIntersecting;},{rootMargin:'150px'}).observe(document.getElementById('cw'));}catch(e){}}
+function render(){
+  requestAnimationFrame(render);
+  if(!_inView)return;
+  ctx.clearRect(0,0,W,H);drawGrid();
+  if(!sandbox){
+    tickPrev();
+    if(dim===4){const o={dim:4,p:p[4],a4:pa4,wofs:0,mat:pMat};o._g=build4(o);draw4Obj(W/2,H/2,o);}
+    else drawObj(W/2,H/2,{dim,p:p[dim],angle:pRot[2],mat:pMat});
+  }else{
+    drawFloor();physTick();
+    for(const o of objects)drawObj(o.x,o.y,o);
+    drawCaption();
+  }
+}
+
+// ---- DRAG / THROW ----
+function gpos(e){const r=canvas.getBoundingClientRect();const s=e.touches?e.touches[0]:e;return[(s.clientX-r.left)*(W/r.width),(s.clientY-r.top)*(H/r.height)];}
+function pick(mx,my){for(let i=objects.length-1;i>=0;i--){const o=objects[i],r=Math.max(getCR(o),22);if((mx-o.x)**2+(my-o.y)**2<r*r){dragging=o;break;}}dvx=0;dvy=0;lmx=mx;lmy=my;}
+function moveTo(mx,my){if(!dragging)return;dvx=mx-lmx;dvy=my-lmy;dragging.x=mx;dragging.y=my;dragging.vx=0;dragging.vy=0;lmx=mx;lmy=my;}
+function release(){if(dragging){dragging.vx=dvx*1.1;dragging.vy=dvy*1.1;if(dragging.avX!==undefined){dragging.avX=dvy*.04;dragging.avY=dvx*.04;dragging.avZ=dvx*.025;}dragging.angVel=dvx*.035;if(dragging.dim===4){dragging.av4+=(dvx+dvy)*.0009;}}dragging=null;}
+canvas.addEventListener('mousedown',e=>{if(sandbox){const[x,y]=gpos(e);pick(x,y);}});
+canvas.addEventListener('mousemove',e=>{const[x,y]=gpos(e);moveTo(x,y);});
+window.addEventListener('mouseup',release);
+canvas.addEventListener('touchstart',e=>{if(!sandbox)return;e.preventDefault();const[x,y]=gpos(e);pick(x,y);},{passive:false});
+canvas.addEventListener('touchmove',e=>{if(!dragging)return;e.preventDefault();const[x,y]=gpos(e);moveTo(x,y);},{passive:false});
+window.addEventListener('touchend',release);
+
+// ---- BUTTONS ----
+document.getElementById('bsp').addEventListener('click',()=>{
+  if(!sandbox){sandbox=true;objects=[spawnObj()];document.getElementById('bsp').textContent='Spawn Shape';document.getElementById('mb').textContent='Sandbox';document.getElementById('ht').textContent='drag + throw | switch dimension, then spawn to mix';}
+  else if(objects.length<14)objects.push(spawnObj());
+});
+document.getElementById('bcl').addEventListener('click',()=>{
+  sandbox=false;objects=[];cap.timer=0;document.getElementById('bsp').textContent='Enter Sandbox';document.getElementById('mb').textContent='Builder';document.getElementById('ht').textContent='';pRot=[0,0,0];pMat=I3();pa4=0;
+});
+
+// ---- INTEGRITY SELF-CHECK (reference 3 + 12): every solid the app draws must be
+// a closed manifold with V-E+F=2 -- the declared 3D polyhedra AND every generated
+// 4D cross-section. Runs once at load; warns to the console only on failure, which
+// would flag a bad face list, a broken generator, or a regressed hull.
+(function selfCheck(){
+  function manifold(verts,faces){// -> {V,E,F} if closed & edge-manifold, else null
+    const vs=new Set(),em=new Map();
+    for(const f of faces){const lp=f.loop;for(let k=0;k<lp.length;k++){const a=lp[k],b=lp[(k+1)%lp.length];vs.add(a);const key=a<b?a+'_'+b:b+'_'+a;em.set(key,(em.get(key)||0)+1);}}
+    for(const c of em.values())if(c!==2)return null;// each edge must be shared by exactly two faces
+    return{V:vs.size,E:em.size,F:faces.length};
+  }
+  let bad=0;
+  // declared 3D polyhedra: closed, Euler 2, and counts matching the table.
+  for(const s of SH3){if(s.sphere)continue;
+    const t=manifold(s.poly.v,s.poly.faces);
+    if(!t||t.V-t.E+t.F!==2||t.V!==s.v||t.E!==s.e||t.F!==s.f){bad++;console.warn('TOPOVIZ integrity: 3D '+s.name+' is not a closed V-E+F=2 solid');}
+  }
+  // generated 4D cross-sections: each is a 3-solid (or flat lamina) and must re-pass V-E+F=2.
+  for(const s of SH4){if(s.sphere)continue;
+    for(let q=0;q<24;q++){const RV=s.V.map(v=>rot4(v,q*0.21));const P=sliceTo3D(RV,s.E,0.0007);if(P.length<3){bad++;continue;}center3(P);
+      const h=hull3(P);if(h.flat)continue;const t=manifold(P,h.faces);if(!t||t.V-t.E+t.F!==2)bad++;}}
+  if(bad)console.warn('TOPOVIZ integrity: '+bad+' geometry check(s) failed');
+})();
+
+buildControls();render();
+</script>
+</body>
+</html>
